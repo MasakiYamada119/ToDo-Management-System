@@ -22,7 +22,7 @@ public class CreateController {
 	@Autowired
 	private TasksRepository repo;
 		
-	@GetMapping("/create")
+	@GetMapping("/main/create/{date}")
 	public String create(@Validated TaskForm taskForm, BindingResult bindingResult,
 			@AuthenticationPrincipal AccountUserDetails user, Model model) {
 		if (bindingResult.hasErrors()) {
@@ -43,5 +43,4 @@ public class CreateController {
 
 		return "redirect:/main";
 	}
-		
 }
