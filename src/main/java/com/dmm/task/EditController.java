@@ -24,23 +24,25 @@ public class EditController {
 	@Autowired
 	private TasksRepository repo;
 	
-	@GetMapping("/edit")
+	@GetMapping("/main/edit/{id}")
 	public String Edit(Model model) {
 		List<Tasks> list = repo.findAll(Sort.by(Sort.Direction.DESC, "id"));
 		model.addAttribute("edit", list);
+		model.addAttribute("task", list);
 		TaskForm taskForm = new TaskForm();
 		model.addAttribute("taskForm", taskForm);
 		return "/edit";
 	}
 	
 	@PostMapping("/main/edit")
-	public String createpage(@Validated TaskForm taskForm, BindingResult bindingResult,
+	public String Editpage(@Validated TaskForm taskForm, BindingResult bindingResult,
 			@AuthenticationPrincipal AccountUserDetails user, Model model) {
 		// バリデーションの結果、エラーがあるかどうかチェック
 		if (bindingResult.hasErrors()) {
 			// エラーがある場合は投稿登録画面を返す
 			List<Tasks> list = repo.findAll(Sort.by(Sort.Direction.DESC, "id"));
 			model.addAttribute("edit", list);
+			model.addAttribute("task", list);
 			model.addAttribute("taskForm", taskForm);
 			return "/main";
 		}
