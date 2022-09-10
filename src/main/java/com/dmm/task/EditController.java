@@ -28,7 +28,6 @@ public class EditController {
 	public String Edit(Model model) {
 		List<Tasks> list = repo.findAll(Sort.by(Sort.Direction.DESC, "id"));
 		model.addAttribute("edit", list);
-		model.addAttribute("task", list);
 		TaskForm taskForm = new TaskForm();
 		model.addAttribute("taskForm", taskForm);
 		return "/edit";
@@ -42,7 +41,6 @@ public class EditController {
 			// エラーがある場合は投稿登録画面を返す
 			List<Tasks> list = repo.findAll(Sort.by(Sort.Direction.DESC, "id"));
 			model.addAttribute("edit", list);
-			model.addAttribute("task", list);
 			model.addAttribute("taskForm", taskForm);
 			return "/main";
 		}
