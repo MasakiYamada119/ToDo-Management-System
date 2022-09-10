@@ -25,11 +25,11 @@ public class CreateController {
 		
 	@GetMapping("/main/create/{date}")
 	public String create(Model model) {
-			List<Tasks> list = repo.findAll(Sort.by(Sort.Direction.DESC, "id"));
-			model.addAttribute("create", list);
-			TaskForm taskForm = new TaskForm();
-			model.addAttribute("taskForm", taskForm);
-			return "/create";
+		List<Tasks> list = repo.findAll(Sort.by(Sort.Direction.DESC, "id"));
+		model.addAttribute("create", list);
+		TaskForm taskForm = new TaskForm();
+		model.addAttribute("taskForm", taskForm);
+		return "/create";
 	}
 	@PostMapping("/main/create")
 	public String createpage(@Validated TaskForm taskForm, BindingResult bindingResult,

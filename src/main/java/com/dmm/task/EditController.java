@@ -25,25 +25,36 @@ public class EditController {
 	private TasksRepository repo;
 	
 	@GetMapping("/edit")
-	public String Edit(@Validated TaskForm taskForm, BindingResult bindingResult,
+	public String Edit(Model model) {
+		List<Tasks> list = repo.findAll(Sort.by(Sort.Direction.DESC, "id"));
+		model.addAttribute("edit", list);
+		TaskForm taskForm = new TaskForm();
+		model.addAttribute("taskForm", taskForm);
+		return "/edit";
+	}
+	
+	@PostMapping("/main/edit")
+	public String createpage(@Validated TaskForm taskForm, BindingResult bindingResult,
 			@AuthenticationPrincipal AccountUserDetails user, Model model) {
+		// バリデーションの結果、エラーがあるかどうかチェック
 		if (bindingResult.hasErrors()) {
+			// エラーがある場合は投稿登録画面を返す
 			List<Tasks> list = repo.findAll(Sort.by(Sort.Direction.DESC, "id"));
 			model.addAttribute("edit", list);
 			model.addAttribute("taskForm", taskForm);
-			return "/edit";
+			return "/main";
 		}
-			
-		Tasks task = new Tasks();
-		task.setName(user.getName());
-		task.setTitle(taskForm.getTitle());
-		task.setText(taskForm.getText());
-		task.setDate(LocalDateTime.now());
-		task.setDone(task.getDone());
+	
+	    Tasks task = new Tasks();
+	    task.setName(user.getName());
+	    task.setTitle(taskForm.getTitle());
+	    task.setText(taskForm.getText());
+	    task.setDate(LocalDateTime.now());
+	    task.setDone(task.getDone());
 
-		repo.save(task);
+	    repo.save(task);
 
-		return "redirect:/main";
+	    return "redirect:/main";
 	}
 
 	@PostMapping("/main/delete/{id}")
@@ -51,6 +62,4 @@ public class EditController {
 		repo.deleteById(id);
 		return "redirect:/main";
 	}
-
-
 }
