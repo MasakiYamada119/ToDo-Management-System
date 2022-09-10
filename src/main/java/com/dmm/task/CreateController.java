@@ -10,7 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 
 import com.dmm.task.data.entity.Tasks;
 import com.dmm.task.data.repository.TasksRepository;
@@ -22,14 +22,7 @@ public class CreateController {
 	@Autowired
 	private TasksRepository repo;
 		
-		/**
-		 * 投稿を作成.
-		 * 
-		 * @param postForm 送信データ
-		 * @param user     ユーザー情報
-		 * @return 遷移先
-		 */
-	@PostMapping("/create")
+	@GetMapping("/create")
 	public String create(@Validated TaskForm taskForm, BindingResult bindingResult,
 			@AuthenticationPrincipal AccountUserDetails user, Model model) {
 		if (bindingResult.hasErrors()) {
