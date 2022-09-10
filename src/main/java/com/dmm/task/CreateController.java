@@ -40,7 +40,7 @@ public class CreateController {
 			List<Tasks> list = repo.findAll(Sort.by(Sort.Direction.DESC, "id"));
 			model.addAttribute("create", list);
 			model.addAttribute("taskForm", taskForm);
-			return "/main/create";
+			return "/main";
 		}
 	    Tasks task = new Tasks();
 	    task.setName(user.getName());
