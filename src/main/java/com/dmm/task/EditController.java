@@ -4,7 +4,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -25,9 +24,9 @@ public class EditController {
 	private TasksRepository repo;
 	
 	@GetMapping("/main/edit/{id}")
-	public String Edit(Model model) {
-		List<Tasks> list = repo.findAll(Sort.by(Sort.Direction.DESC, "id"));
-		model.addAttribute("edit", list);
+	public String Edit(Model model, @PathVariable Integer id) { // URLマッピングの{id}を取得
+		List<Tasks> task = repo.findAll();
+		model.addAttribute("task", task);
 		TaskForm taskForm = new TaskForm();
 		model.addAttribute("taskForm", taskForm);
 		return "/edit";
@@ -35,12 +34,12 @@ public class EditController {
 	
 	@PostMapping("/main/edit")
 	public String Editpage(@Validated TaskForm taskForm, BindingResult bindingResult,
-			@AuthenticationPrincipal AccountUserDetails user, Model model) {
+			@AuthenticationPrincipal AccountUserDetails user, Model model, @PathVariable Integer id) {
 		// バリデーションの結果、エラーがあるかどうかチェック
 		if (bindingResult.hasErrors()) {
 			// エラーがある場合は投稿登録画面を返す
-			List<Tasks> list = repo.findAll(Sort.by(Sort.Direction.DESC, "id"));
-			model.addAttribute("edit", list);
+			List<Tasks> task = repo.findAll();
+			model.addAttribute("task", task);
 			model.addAttribute("taskForm", taskForm);
 			return "/main";
 		}

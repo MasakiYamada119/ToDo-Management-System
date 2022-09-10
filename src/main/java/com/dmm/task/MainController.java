@@ -28,6 +28,12 @@ public class MainController {
 	    LocalDate nextmonth = LocalDate.now().plusMonths(1L); //当月カレンダーの来月分
 	    LocalDate lastDayOfNextMonth = nextmonth.withDayOfMonth(1);
 	    final int lastday = firstday.lengthOfMonth(); //月末
+	    
+	    MultiValueMap<LocalDate, Tasks> tasks = new LinkedMultiValueMap<LocalDate, Tasks>();
+    	List<Tasks> list = repo.findAll();
+    	for(Tasks t : list) {
+    	    tasks.add(t.getDate().toLocalDate(), t);
+    	}
          
 		List<List<LocalDate>> d = new ArrayList<>();
         for (int i = 1; i <= 1; i++) {
@@ -99,13 +105,9 @@ public class MainController {
             d.add(d4);
             d.add(d5);
         }
-    	MultiValueMap<LocalDate, Tasks> tasks = new LinkedMultiValueMap<LocalDate, Tasks>();
-    	List<Tasks> list = repo.findAll();
-    	for(Tasks t : list) {
-    	    tasks.add(t.getDate().toLocalDate(), t);
-    	}
     	model.addAttribute("tasks", tasks);
 		model.addAttribute("matrix", d);
 		return "main";
 	}
+
 }

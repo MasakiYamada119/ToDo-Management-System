@@ -4,7 +4,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -25,7 +24,7 @@ public class CreateController {
 		
 	@GetMapping("/main/create/{date}")
 	public String create(Model model) {
-		List<Tasks> list = repo.findAll(Sort.by(Sort.Direction.DESC, "id"));
+		List<Tasks> list = repo.findAll();
 		model.addAttribute("create", list);
 		TaskForm taskForm = new TaskForm();
 		model.addAttribute("taskForm", taskForm);
@@ -37,7 +36,7 @@ public class CreateController {
 		// バリデーションの結果、エラーがあるかどうかチェック
 		if (bindingResult.hasErrors()) {
 			// エラーがある場合は投稿登録画面を返す
-			List<Tasks> list = repo.findAll(Sort.by(Sort.Direction.DESC, "id"));
+			List<Tasks> list = repo.findAll();
 			model.addAttribute("create", list);
 			model.addAttribute("taskForm", taskForm);
 			return "/main";
