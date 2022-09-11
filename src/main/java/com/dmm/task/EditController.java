@@ -1,6 +1,5 @@
 package com.dmm.task;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +24,7 @@ public class EditController {
 	
 	@GetMapping("/main/edit/{id}")
 	public String Edit(Model model, @PathVariable Integer id) { // URLマッピングの{id}を取得
-		List<Tasks> task = repo.findAll();
+		Tasks task = repo.getById(id);
 		model.addAttribute("task", task);
 		TaskForm taskForm = new TaskForm();
 		model.addAttribute("taskForm", taskForm);
@@ -48,7 +47,7 @@ public class EditController {
 	    task.setName(user.getName());
 	    task.setTitle(taskForm.getTitle());
 	    task.setText(taskForm.getText());
-	    task.setDate(LocalDateTime.now());
+	    task.setDate(taskForm.getDate().atTime(0,0));
 	    task.setDone(task.getDone());
 
 	    repo.save(task);
