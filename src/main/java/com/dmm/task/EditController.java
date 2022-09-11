@@ -31,7 +31,7 @@ public class EditController {
 		return "/edit";
 	}
 	
-	@PostMapping("/main/edit")
+	@PostMapping("/main/edit/{id}")
 	public String Edit(@Validated TaskForm taskForm, BindingResult bindingResult,
 			@AuthenticationPrincipal AccountUserDetails user, Model model, @PathVariable Integer id) {
 		// バリデーションの結果、エラーがあるかどうかチェック
@@ -44,6 +44,7 @@ public class EditController {
 		}
 		
 	    Tasks task = new Tasks();
+	    task.setId(taskForm.getId());
 	    task.setName(user.getName());
 	    task.setTitle(taskForm.getTitle());
 	    task.setText(taskForm.getText());

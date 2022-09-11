@@ -28,8 +28,10 @@ public class MainController {
 		LocalDate firstday = LocalDate.now().withDayOfMonth(1); //その月の1日のLocalDates
 	    DayOfWeek week = firstday.getDayOfWeek(); //曜日を表すDayOfWeek
 	    LocalDate lastmonth = firstday.minusDays(week.getValue()); //当月カレンダーの前月分
-	    LocalDate nextmonth = LocalDate.now().plusMonths(1L); //当月カレンダーの来月分
-	    LocalDate lastDayOfNextMonth = nextmonth.withDayOfMonth(1);
+	    LocalDate nextmonth = LocalDate.now().plusMonths(1L); //当月カレンダーの来月分(10月)
+	    LocalDate nextmonthOfFirstday = nextmonth.withDayOfMonth(1);
+	    LocalDate Lastmonth = LocalDate.now().minusMonths(1L); //当月カレンダーの来月分(8月)
+	    LocalDate LastmonthOfFirstday = Lastmonth.withDayOfMonth(1);
 	    LocalDate lastday = LocalDate.now().withDayOfMonth(30); //月末
 	    
 	    MultiValueMap<LocalDate, Tasks> tasks = new LinkedMultiValueMap<LocalDate, Tasks>();
@@ -105,7 +107,7 @@ public class MainController {
             	d5.add(firstday.plusDays(27));
             	d5.add(firstday.plusDays(28));
             	d5.add(firstday.plusDays(29));
-            	d5.add(lastDayOfNextMonth);
+            	d5.add(nextmonthOfFirstday);
             	if (week == DayOfWeek.SATURDAY) {
             		System.out.println("\n");
     			}
@@ -118,6 +120,8 @@ public class MainController {
         }
     	model.addAttribute("tasks", tasks);
 		model.addAttribute("matrix", d);
+		model.addAttribute("prev", LastmonthOfFirstday);
+		model.addAttribute("next", nextmonthOfFirstday);
 		return "main";
 	}
 

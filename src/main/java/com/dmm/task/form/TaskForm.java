@@ -20,5 +20,7 @@ public class TaskForm {
 	private LocalDate date;
 	
 	private boolean done;
+	
+	private int id;
 
 }
