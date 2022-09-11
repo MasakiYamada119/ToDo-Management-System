@@ -31,6 +31,8 @@ public class MainController {
 	    LocalDate nextmonth = LocalDate.now().plusMonths(1L); //当月カレンダーの来月分
 	    LocalDate lastDayOfNextMonth = nextmonth.withDayOfMonth(1);
 	    final int lastday = firstday.lengthOfMonth(); //月末
+	    LocalDate start = LocalDate.now();
+	    LocalDate end = LocalDate.now();
 	    
 	    MultiValueMap<LocalDate, Tasks> tasks = new LinkedMultiValueMap<LocalDate, Tasks>();
     	List<Tasks> list ;
@@ -40,7 +42,7 @@ public class MainController {
     	if (user.getAuthorities().stream().map(GrantedAuthority::getAuthority).anyMatch(a -> a.equals("ROLE_ADMIN"))) {
     	    list = repo.findAll(); //ROLE_ADMINならTasksの全情報を開示
     	} else {
-    	    list = repo.findByDateBetween(LocalDate.atTime(9,1), LocalDate.atTime(9,30), user.getName());
+    	    list = repo.findByDateBetween(start.atTime(9,1), end.atTime(9,30), user.getName());
     	}
     	for(Tasks t : list) {
     	    tasks.add(t.getDate().toLocalDate(), t);
