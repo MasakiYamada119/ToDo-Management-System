@@ -48,7 +48,7 @@ public class EditController {
 	    task.setTitle(taskForm.getTitle());
 	    task.setText(taskForm.getText());
 	    task.setDate(taskForm.getDate().atTime(0,0));
-	    task.setDone(task.getDone());
+	    task.setDone(taskForm.getDone());
 
 	    repo.save(task);
 
