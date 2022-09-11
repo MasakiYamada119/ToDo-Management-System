@@ -19,6 +19,6 @@ public class TaskForm {
 	@DateTimeFormat(pattern = "yyyy-MM-dd")    // データフォーマットを指定する
 	private LocalDate date;
 	
-	private Boolean done;
+	private boolean done;
 
 }

@@ -22,7 +22,7 @@ public class CreateController {
 	private TasksRepository repo;
 		
 	@GetMapping("/main/create/{date}")
-	public String create(Model model) {
+	public String createpage(Model model) {
 		List<Tasks> list = repo.findAll();
 		model.addAttribute("create", list);
 		TaskForm taskForm = new TaskForm();
@@ -30,7 +30,7 @@ public class CreateController {
 		return "/create";
 	}
 	@PostMapping("/main/create")
-	public String createpage(@Validated TaskForm taskForm, BindingResult bindingResult,
+	public String create(@Validated TaskForm taskForm, BindingResult bindingResult,
 			@AuthenticationPrincipal AccountUserDetails user, Model model) {
 		// バリデーションの結果、エラーがあるかどうかチェック
 		if (bindingResult.hasErrors()) {

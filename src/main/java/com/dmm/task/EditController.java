@@ -23,7 +23,7 @@ public class EditController {
 	private TasksRepository repo;
 	
 	@GetMapping("/main/edit/{id}")
-	public String Edit(Model model, @PathVariable Integer id) { // URLマッピングの{id}を取得
+	public String Editpage(Model model, @PathVariable Integer id) { // URLマッピングの{id}を取得
 		Tasks task = repo.getById(id);
 		model.addAttribute("task", task);
 		TaskForm taskForm = new TaskForm();
@@ -32,7 +32,7 @@ public class EditController {
 	}
 	
 	@PostMapping("/main/edit")
-	public String Editpage(@Validated TaskForm taskForm, BindingResult bindingResult,
+	public String Edit(@Validated TaskForm taskForm, BindingResult bindingResult,
 			@AuthenticationPrincipal AccountUserDetails user, Model model, @PathVariable Integer id) {
 		// バリデーションの結果、エラーがあるかどうかチェック
 		if (bindingResult.hasErrors()) {
@@ -42,13 +42,13 @@ public class EditController {
 			model.addAttribute("taskForm", taskForm);
 			return "/main";
 		}
-	
+		
 	    Tasks task = new Tasks();
 	    task.setName(user.getName());
 	    task.setTitle(taskForm.getTitle());
 	    task.setText(taskForm.getText());
 	    task.setDate(taskForm.getDate().atTime(0,0));
-	    task.setDone(taskForm.getDone());
+	    task.setDone(taskForm.isDone());
 
 	    repo.save(task);
 
