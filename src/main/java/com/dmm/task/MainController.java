@@ -25,44 +25,73 @@ public class MainController {
 	
 	@GetMapping("/main")
 	public String Calendar(@AuthenticationPrincipal AccountUserDetails user, Model model) {
-		LocalDate firstday = LocalDate.now().withDayOfMonth(1); //今月の1日のLocalDates
-	    DayOfWeek w = firstday.getDayOfWeek(); //曜日を表すDayOfWeek
-	    LocalDate lastMonth = firstday.minusDays(w.getValue()); //当月カレンダーの前月分
+		LocalDate day = LocalDate.now();
+		System.out.println(day);
+        LocalDate firstDay = LocalDate.of(day.getYear(), day.getMonthValue(), 1); //今月の1日のLocalDate;
+        System.out.println(firstDay);
+        DayOfWeek wf = firstDay.getDayOfWeek(); //1日の曜日を表すDayOfWeek
+        System.out.println(wf);
+        System.out.println(wf.getValue());
+        LocalDate lastMonth = firstDay.minusDays(wf.getValue()); //今月カレンダーの前月分(8月28日)
+        System.out.println(lastMonth);
+        final int lastDay = firstDay.lengthOfMonth();
+        System.out.println(lastDay);
+		
+		List<List<LocalDate>> matrix = new ArrayList<>(); //週が入る行を作成するリスト
+        List<LocalDate> week = new ArrayList<>(); //週のLocalDateを格納するリスト(自動的にmatrixに格納される)
+            
+        // 1週目（前月分を含む1週目）
+        for (int i = 1; i <= 7; i++) {
+        	wf = lastMonth.getDayOfWeek();
+            week.add(lastMonth);
+            lastMonth = lastMonth.plusDays(1);
+            if(wf == DayOfWeek.SATURDAY){
+                matrix.add(week);   // 月に週を追加
+                week = new ArrayList<>();  // 新しい週のListを作成
+            }
+        }
+        
+        // 2週目（2週目から月末まで）
+        for(int i = 0; i <= lastMonth.lengthOfMonth(); i++) {
+        	wf = lastMonth.getDayOfWeek();
+            week.add(lastMonth);
+            lastMonth = lastMonth.plusDays(1);
+            if(wf == DayOfWeek.SATURDAY){
+                matrix.add(week);   // 月に週を追加
+                week = new ArrayList<>();  // 新しい週のListを作成
+            }
+        }
+        
+        // 最終週（来月の一週目）
+        wf = lastMonth.getDayOfWeek();
+        for (int i = 1; i <= 7 - wf.getValue(); i++) {
+            week.add(lastMonth);
+            lastMonth = lastMonth.plusDays(1);
+            if(wf == DayOfWeek.SATURDAY){
+                matrix.add(week);   // 月に週を追加
+                week = new ArrayList<>();  // 新しい週のListを作成
+            }
+        }            
+        
+                 
+        MultiValueMap<LocalDate, Tasks> tasks = new LinkedMultiValueMap<LocalDate, Tasks>();
+        List<Tasks> list ;
+        
 	    LocalDate nextMonthAll = LocalDate.now().plusMonths(1L); //当月カレンダーの来月分(10月)
 	    LocalDate nextMonthOfFirstday = nextMonthAll.withDayOfMonth(1);
 	    LocalDate lastMonthAll = LocalDate.now().minusMonths(1L); //当月カレンダーの前月分(8月)
 	    LocalDate LastMonthOfFirstday = lastMonthAll.withDayOfMonth(1);
-	    final int lastDay = firstday.lengthOfMonth(); //月末
-	    
-	    MultiValueMap<LocalDate, Tasks> tasks = new LinkedMultiValueMap<LocalDate, Tasks>();
-    	List<Tasks> list ;
 
-    	//getAuthority(ユーザーに付与された権限を返すメソッド)を使いif文の条件式でstream処理(CollectionやListからデータを抽出する処理)を行い"ROLE_ADMIN"を判定する
-    	//.map(GrantedAuthority::getAuthority)でstream<String>をstream<collection>(getAuthorityの戻り値)に変換する
-    	if (user.getAuthorities().stream().map(GrantedAuthority::getAuthority).anyMatch(a -> a.equals("ROLE_ADMIN"))) {
-    	    list = repo.findAll(); //ROLE_ADMINならTasksの全情報を開示
-    	} else {
-    	    list = repo.findByDateBetween(firstday.atTime(0,0), nextMonthOfFirstday.atTime(23,59), user.getName());
-    	}
-    	for(Tasks t : list) {
-    	    tasks.add(t.getDate().toLocalDate(), t);
-    	}
-         
-		List<List<LocalDate>> matrix = new ArrayList<>();
-            List<LocalDate> week = new ArrayList<>(); 
-            // 1週目（前月分を含む1週目）
-            for (int i = 1; i <= 7; i++) {
-            	week.add(lastMonth);
-            	lastMonth = lastMonth.plusDays(1);
-            }
-            // 2週目（2週目から月末まで）
-            for(int i = 7; i <= lastDay; i++) {
-                if(w == DayOfWeek.SATURDAY){
-                    matrix.add(week);   // 月に週を追加
-                    week = new ArrayList<>();  // 新しい週のListを作成
-                }
-                firstday = firstday.plusDays(1);
-            }
+        //getAuthority(ユーザーに付与された権限を返すメソッド)を使いif文の条件式でstream処理(CollectionやListからデータを抽出する処理)を行い"ROLE_ADMIN"を判定する
+        //.map(GrantedAuthority::getAuthority)でstream<String>をstream<collection>(getAuthorityの戻り値)に変換する
+        if (user.getAuthorities().stream().map(GrantedAuthority::getAuthority).anyMatch(a -> a.equals("ROLE_ADMIN"))) {
+        	 list = repo.findAll(); //ROLE_ADMINならTasksの全情報を開示
+        } else {
+        	 list = repo.findByDateBetween(firstDay.atTime(0,0), nextMonthOfFirstday.atTime(23,59), user.getName());
+        }
+        for(Tasks t : list) {
+        	 tasks.add(t.getDate().toLocalDate(), t);
+        }
     	model.addAttribute("tasks", tasks);
 		model.addAttribute("matrix", matrix);
 		model.addAttribute("prev", LastMonthOfFirstday);
