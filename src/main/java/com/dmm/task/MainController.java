@@ -32,8 +32,8 @@ public class MainController {
         DayOfWeek wf = firstDay.getDayOfWeek(); //1日の曜日を表すDayOfWeek
         System.out.println(wf);
         System.out.println(wf.getValue());
-        LocalDate lastMonth = firstDay.minusDays(wf.getValue()); //今月カレンダーの前月分(8月28日)
-        System.out.println(lastMonth);
+        day = firstDay.minusDays(wf.getValue()); //今月カレンダーの前月分(8月28日)
+        System.out.println(day);
         final int lastDay = firstDay.lengthOfMonth();
         System.out.println(lastDay);
 		
@@ -42,9 +42,9 @@ public class MainController {
             
         // 1週目（前月分を含む1週目）
         for (int i = 1; i <= 7; i++) {
-        	wf = lastMonth.getDayOfWeek();
-            week.add(lastMonth);
-            lastMonth = lastMonth.plusDays(1);
+        	wf = day.getDayOfWeek();
+            week.add(day);
+            day = day.plusDays(1);
             if(wf == DayOfWeek.SATURDAY){
                 matrix.add(week);   // 月に週を追加
                 week = new ArrayList<>();  // 新しい週のListを作成
@@ -52,10 +52,10 @@ public class MainController {
         }
         
         // 2週目（2週目から月末まで）
-        for(int i = 0; i <= lastMonth.lengthOfMonth(); i++) {
-        	wf = lastMonth.getDayOfWeek();
-            week.add(lastMonth);
-            lastMonth = lastMonth.plusDays(1);
+        for(int i = 7; i <= day.lengthOfMonth(); i++) {
+        	wf = day.getDayOfWeek();
+            week.add(day);
+            day = day.plusDays(1);
             if(wf == DayOfWeek.SATURDAY){
                 matrix.add(week);   // 月に週を追加
                 week = new ArrayList<>();  // 新しい週のListを作成
@@ -63,17 +63,13 @@ public class MainController {
         }
         
         // 最終週（来月の一週目）
-        wf = lastMonth.getDayOfWeek();
+        wf = day.getDayOfWeek();
         for (int i = 1; i <= 7 - wf.getValue(); i++) {
-            week.add(lastMonth);
-            lastMonth = lastMonth.plusDays(1);
-            if(wf == DayOfWeek.SATURDAY){
-                matrix.add(week);   // 月に週を追加
-                week = new ArrayList<>();  // 新しい週のListを作成
-            }
-        }            
+            week.add(day);
+            day = day.plusDays(1);
+        }
+        matrix.add(week);   // 月に週を追加
         
-                 
         MultiValueMap<LocalDate, Tasks> tasks = new LinkedMultiValueMap<LocalDate, Tasks>();
         List<Tasks> list ;
         
