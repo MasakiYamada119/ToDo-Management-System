@@ -81,9 +81,9 @@ public class MainController {
         //getAuthority(ユーザーに付与された権限を返すメソッド)を使いif文の条件式でstream処理(CollectionやListからデータを抽出する処理)を行い"ROLE_ADMIN"を判定する
         //.map(GrantedAuthority::getAuthority)でstream<String>をstream<collection>(getAuthorityの戻り値)に変換する
         if (user.getAuthorities().stream().map(GrantedAuthority::getAuthority).anyMatch(a -> a.equals("ROLE_ADMIN"))) {
-        	 list = repo.findAll(); //ROLE_ADMINならTasksの全情報を開示
+        	 list = repo.findByDateBetweenAdmin(firstDay.atTime(0,0), nextMonthOfFirstday.atTime(23,59)); //ROLE_ADMINならTasksの全情報を開示
         } else {
-        	 list = repo.findByDateBetween(firstDay.atTime(0,0), nextMonthOfFirstday.atTime(23,59), user.getName());
+        	 list = repo.findByDateBetweenUser(firstDay.atTime(0,0), nextMonthOfFirstday.atTime(23,59), user.getName());
         }
         for(Tasks t : list) {
         	 tasks.add(t.getDate().toLocalDate(), t);
