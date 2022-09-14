@@ -13,6 +13,7 @@ import org.springframework.ui.Model;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import com.dmm.task.data.entity.Tasks;
 import com.dmm.task.data.repository.TasksRepository;
@@ -70,6 +71,13 @@ public class MainController {
         }
         matrix.add(week);   // 月に週を追加
         
+        List<LocalDate> next = new ArrayList<>();
+        
+		for(int i = 1; i <= 12; i++) {
+			next.add(day);
+			day = day.plusMonths(1L);
+		}
+        
         MultiValueMap<LocalDate, Tasks> tasks = new LinkedMultiValueMap<LocalDate, Tasks>();
         List<Tasks> list ;
         
@@ -91,7 +99,20 @@ public class MainController {
     	model.addAttribute("tasks", tasks);
 		model.addAttribute("matrix", matrix);
 		model.addAttribute("prev", LastMonthOfFirstday);
-		model.addAttribute("next", nextMonthOfFirstday);
+		
 		return "main";
+	}
+	
+	@PostMapping("/main")
+	public String NextMonth(@AuthenticationPrincipal AccountUserDetails user,Model model) {
+		List<LocalDate> next = new ArrayList<>();
+		LocalDate day = LocalDate.now();
+		for(int i = 1; i <= 12; i++) {
+			next.add(day);
+			day = day.plusMonths(1L);
+		}
+		model.addAttribute("next", next);
+		return "redirect:/main";
+		
 	}
 }
