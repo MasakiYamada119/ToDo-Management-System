@@ -59,7 +59,11 @@ public class MainController {
         }
         
         // 2週目（2週目から月末まで）
-        for(int i = 7; i <= day.lengthOfMonth(); i++) {
+        int leftOfMonth = day.lengthOfMonth() - day.getDayOfMonth();    // ①1週目の当月分
+        leftOfMonth = day.lengthOfMonth() - leftOfMonth;    // ②当月の全日数から①を引く
+        leftOfMonth = 7 - leftOfMonth;    // ③int i = 7を考慮した追加日数
+        
+        for(int i = 7; i <= day.lengthOfMonth() + leftOfMonth; i++) {
         	wf = day.getDayOfWeek();
             week.add(day);
             day = day.plusDays(1);
